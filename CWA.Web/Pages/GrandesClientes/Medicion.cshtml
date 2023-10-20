@@ -1,0 +1,168 @@
+﻿@page "{registroid:int}/{medicionid:int?}/{handler?}"
+@model CWA.Web.Pages.GrandesClientes.MedicionModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    var link = _links.GetPathByPage("/GrandesClientes/Mediciones", null, new { registroid = Model.RegistroId });
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = "Medición" });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 2, Text = Model.Nombre, Link = link });
+
+    string aprobado = _options.Value.GrandesClientes.Strings.Aprobado;
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCCardHeaderPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    @if (Model.ShowView)
+                    {
+                        <partial name="_GCMedicionPartial" model="Model.ViewModel" />
+                    }
+
+                    @* Update Form *@
+                    @if (Model.ShowUpdate)
+                    {
+                        <form id="cwa-update-form" asp-page-handler="@Model.HandlerName" method="post" enctype="multipart/form-data"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete">
+
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="EditModel.TipoConexionId"></label>
+                                    <select id="cwa-tipo-select" asp-for="EditModel.TipoConexionId" class="form-select" asp-items="Model.Tipos">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="EditModel.TipoConexionId" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="EditModel.DistribuidoraId"></label>
+                                    <select id="cwa-agente-select" asp-for="EditModel.DistribuidoraId" class="form-select" asp-items="Model.Distribuidoras">
+                                        <option value="">No aplica</option>
+                                    </select>
+                                    <span cwa-for="EditModel.DistribuidoraId" class="text-danger cwa-small"></span>
+                                </div>
+                                <div id="div-identificacion" class="col-12 col-lg-6 mb-2" style="display: none;">
+                                    <input id="cwa-identificacion-hidden" type="hidden" asp-for="EditModel.TipoDistIdentificacionId" />
+                                    <label id="cwa-identificacion-label" asp-for="EditModel.Identificacion"></label>
+                                    <input asp-for="EditModel.Identificacion" class="form-control" />
+                                    <span cwa-for="EditModel.Identificacion" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="EditModel.Serie"></label>
+                                    <input asp-for="EditModel.Serie" class="form-control" />
+                                    <span cwa-for="EditModel.Serie" class="text-danger cwa-small"></span>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="EditModel.TensionId"></label>
+                                    <select asp-for="EditModel.TensionId" class="form-select" asp-items="Model.Tensiones">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="EditModel.TensionId" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div id="div-subestacion" class="col-12 col-lg-6 mb-2" style="display: none;">
+                                    <label asp-for="EditModel.SubestacionId"></label>
+                                    <select asp-for="EditModel.SubestacionId" class="form-select" asp-items="Model.Subestaciones">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="EditModel.SubestacionId" class="text-danger cwa-small"></span>
+                                </div>
+                                <div id="div-linea" class="col-12 col-lg-6 mb-2" style="display: none;">
+                                    <label asp-for="EditModel.LineaId"></label>
+                                    <select asp-for="EditModel.LineaId" class="form-select" asp-items="Model.Lineas">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="EditModel.LineaId" class="text-danger cwa-small"></span>
+                                </div>
+                                <div id="div-circuito" class="col-12 col-lg-6 mb-2" style="display: none;">
+                                    <label asp-for="EditModel.Circuito"></label>
+                                    <input asp-for="EditModel.Circuito" class="form-control" />
+                                    <span cwa-for="EditModel.Circuito" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+
+                        </form>
+                    }
+
+                    @* Approve Form *@
+                    <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                    </form>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center p-3">
+                        <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                            <span>Guardar</span>
+                        </button>
+                        <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                            <span>Aprobar</span>
+                        </button>
+                        <a id="cwa-back-link" asp-page="Mediciones" asp-route-registroid="@Model.RegistroId" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                @* Footer *@
+                @if (Model.MedicionId.HasValue)
+                {
+                    <partial name="_GCCardFooterPartial" model="Model.LastSave" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.editing = @Model.MedicionId.HasValue.ToString().ToLower();
+            //cwa.page.tituloCampo = $("#cwa-identificacion-label").text();
+            cwa.page.tipos = @Html.Raw(Json.Serialize(Model.Tipos.Select(t => new { t.Value })));
+            cwa.page.identificaciones = @Html.Raw(Json.Serialize(Model.Identificaciones.Select(i => new { i.Id, i.Descripcion, i.RefVal1 })));
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(aprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.Strings.AprobarDatos)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+            cwa.page.showView = @(Model.ShowView.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/grandesclientes/gc.medicion.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

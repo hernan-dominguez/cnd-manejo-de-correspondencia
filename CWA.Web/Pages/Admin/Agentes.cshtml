@@ -1,0 +1,55 @@
+﻿@page
+@model CWA.Web.Pages.Admin.AgentesModel
+
+@inject AgenteService _agenteService
+
+@{
+    ViewData["Title"] = "Agentes";
+
+    var agentes = await _agenteService.GetAgenteListingAsync();
+}
+
+<br />
+<div class="container">
+    <div class="row justify-content-end mb-3">
+        <div class="col-auto">
+            <a asp-page="Agente" class="btn btn-primary" style="width: 100px;">Nuevo</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => agentes[0].Nombre)</th>
+                                    <th>@Html.DisplayNameFor(m => agentes[0].IdBdi)</th>
+                                    <th>@Html.DisplayNameFor(m => agentes[0].Codigo)</th>
+                                    <th>@Html.DisplayNameFor(m => agentes[0].TipoAgente)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in agentes)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-page="Agente" asp-route-agenteid="@item.Id">@item.Nombre</a>
+                                        </td>
+                                        <td><span>@item.IdBdi</span></td>
+                                        <td><span>@item.Codigo</span></td>
+                                        <td><span>@item.TipoAgente</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

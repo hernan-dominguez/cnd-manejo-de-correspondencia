@@ -1,0 +1,12 @@
+﻿@model DateTime
+
+@inject IOptions<ApplicationSettings> _options
+
+<div class="card-footer bg-white">
+    <div class="row justify-content-end">
+        <div class="col-auto">
+            <small>@_options.Value.GrandesClientes.Strings.Actualizado </small>
+            <small id="cwa-last-save">@Model.ApplyFormat(_options.Value.DateTimeFormat)</small>
+        </div>
+    </div>
+</div>

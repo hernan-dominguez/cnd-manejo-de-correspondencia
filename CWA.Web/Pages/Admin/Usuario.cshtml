@@ -1,0 +1,14 @@
+﻿@page "{usuarioid:int?}"
+@model CWA.Web.Pages.Admin.UsuarioModel
+@{
+    ViewData["Title"] = "Usuario";
+}
+
+@if (Model.UsuarioId is null)
+{
+    <h1>New User</h1>
+}
+else
+{
+    <h1>Editing User: @Model.UsuarioId.ToString()</h1>
+}

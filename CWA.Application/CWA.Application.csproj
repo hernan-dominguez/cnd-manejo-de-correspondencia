@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>c24434b7-6baa-411d-bb0b-7e77e34a99b2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="ClosedXML" Version="0.96.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.23019.12000" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CWA.AccessControl\CWA.AccessControl.csproj" />
+    <ProjectReference Include="..\CWA.Data\CWA.Data.csproj" />
+    <ProjectReference Include="..\CWA.Models\CWA.Models.csproj" />
+  </ItemGroup>
+
+</Project>

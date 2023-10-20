@@ -1,0 +1,26 @@
+﻿@model ViewPack
+
+@{
+    Layout = "~/Pages/Shared/_LayoutBase.cshtml";
+
+    var code = Model.First().Key;
+    var message = Model.First().Value;        
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h6>@message</h6>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <p class="fw-bold text-danger">Error @code</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <a href="/Index" class="btn btn-sm btn-primary" style="width: 150px;">Volver al Inicio</a>
+        </div>
+    </div>
+</div>

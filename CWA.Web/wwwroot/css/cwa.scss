@@ -1,0 +1,29 @@
+﻿@mixin cwa-transition($attribute) {
+    -webkit-transition: $attribute 0.3s;
+    -moz-transition: $attribute 0.3s;
+    transition: $attribute 0.3s;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+}
+
+.cwa-site-logo {
+    width: 70px;
+}
+
+.table a, ul a, .cwa-no-underline {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.cwa-dialog-button {
+    width: 100px;
+}
+
+.cwa-small {
+    font-size: 0.825em;
+}

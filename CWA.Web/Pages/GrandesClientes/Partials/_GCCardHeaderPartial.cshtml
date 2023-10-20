@@ -1,0 +1,59 @@
+﻿@model ViewPack<object>
+
+@inject IOptions<ApplicationSettings> _options
+
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                @if (Model.ContainsKey("ltext"))
+                {
+                    <small>@Model["ltext"].ToString()</small>
+                }
+            </div>
+            <div class="col-auto align-items-center">
+                @if (Model.ContainsKey("rtext"))
+                {
+                    <small>@Model["rtext"].ToString()</small>
+                }
+                else
+                {
+                    @if (Model.ContainsKey("registro"))
+                    {
+                        if (Model.ContainsKey("autorizado"))
+                        {
+                            var fecha = ((DateTime)Model["autorizado"]).ApplyFormat(_options.Value.DateFormat);
+
+                            <i id="cwa-approved-icon" class="bi-check-circle-fill text-success"></i>
+                            <small id="cwa-approved">@_options.Value.GrandesClientes.Strings.Autorizado</small>
+                            <small id="cwa-approve-date">@fecha</small>
+                        }
+                        else
+                        {
+                            <i id="cwa-approved-icon" class="bi-clock-fill text-warning"></i>
+                            <small id="cwa-approved">@_options.Value.GrandesClientes.Strings.NoAutorizado</small>
+                        }
+                    }
+
+                    @if (Model.ContainsKey("item"))
+                    {
+                        if (Model.ContainsKey("aprobado"))
+                        {
+                            var fecha = ((DateTime)Model["aprobado"]).ApplyFormat(_options.Value.DateTimeFormat);
+
+                            <i id="cwa-approved-icon" class="bi-check-circle-fill text-success"></i>
+                            <small id="cwa-approved">@_options.Value.GrandesClientes.Strings.Aprobado </small>
+                            <small id="cwa-approve-date">@fecha</small>
+                        }
+                        else
+                        {
+                            <i id="cwa-approved-icon" class="bi-clock-fill text-warning"></i>
+                            <small id="cwa-approved">@_options.Value.GrandesClientes.Strings.NoAprobado </small>
+                            <small id="cwa-approve-date"></small>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </li>
+</ul>

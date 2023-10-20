@@ -1,0 +1,43 @@
+﻿@model ViewPack<object>
+
+@inject LinkGenerator _links
+
+@{
+    var current = $"{Model["current"]}";
+}
+
+@functions {
+    bool Inactive(string target, string current) { return target != current; }
+}
+
+<div class="card-header bg-white">
+    <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+            @if (Inactive("salientes", current))
+            {
+                <a asp-page="DescargaDocsSalientes" class="nav-link">
+                    <i class="bi-flag d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Recibidas</span>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled">Recibidas</span>
+            }
+        </li>
+
+        <li class="nav-item">
+            @if (Inactive("entrantes", current))
+            {
+                <a asp-page="DescargaDocsEntrantes" class="nav-link">
+                    <i class="bi-pencil-square d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enviadas</span>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled">Enviadas</span>
+            }
+        </li>
+    </ul>
+</div>

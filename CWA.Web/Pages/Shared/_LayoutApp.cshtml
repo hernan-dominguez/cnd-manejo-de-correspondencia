@@ -1,0 +1,51 @@
+﻿@inject LinkGenerator _link
+
+@{ 
+    Layout = "_LayoutBase";
+
+    string path = _link.GetPathByPage(Context).ToLower();
+    string title = "Dashboard";
+
+    if (path.Contains("/admin")) title = "Administración del Sitio";
+
+    if (path.Contains("/grandesclientes")) title = "Registro de Grandes Clientes";
+
+    if (path.Contains("/viabilidadcontratos")) title = "Viabilidad de Contratos";
+
+    ViewData["SectionTitle"] = title;
+
+    // Development only (set "false" for production)
+    var checkViewPort = false;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col p-3 text-start text-light bg-primary">
+                    <span>@ViewData["SectionTitle"]</span>
+                    <span cwa-visible="checkViewPort" class="d-inline d-sm-none">XS</span>
+                    <span cwa-visible="checkViewPort" class="d-none d-sm-inline d-md-none">SM</span>
+                    <span cwa-visible="checkViewPort" class="d-none d-md-inline d-lg-none">MD</span>
+                    <span cwa-visible="checkViewPort" class="d-none d-lg-inline d-xl-none">LG</span>
+                    <span cwa-visible="checkViewPort" class="d-none d-xl-inline d-xxl-none">XL</span>
+                    <span cwa-visible="checkViewPort" class="d-none d-xxl-inline">XXL</span>
+                </div>
+            </div>
+            @RenderSection("PageBreadcrumbsSection", required: false)            
+            <div class="row">
+                <div class="col" style="padding-bottom: 100px;">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section UserPartialSection {
+    <partial name="_UserPartial" />
+}
+
+@section PageSections {
+    @RenderSection("PageScriptSection", required: false)
+}

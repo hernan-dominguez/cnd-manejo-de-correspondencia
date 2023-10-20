@@ -1,0 +1,43 @@
+﻿@page
+@model CWA.Web.Pages.ManejoDeCorrespondencia.IndexModel
+
+@inject AppAccessControlService _access 
+
+@section PageBreadcrumbsSection { 
+    <partial name="_BreadcrumbsPartial" model="new List<Breadcrumb>()" /> 
+} 
+
+<div class="container">
+    <div class="row g-3">
+
+        @if (await _access.HasClaimAsync(ClaimNames.MCUpload))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Carga de Notas y Documentos</h5>
+                        <a asp-page="/ManejoDeCorrespondencia/CargaDocumentos" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (await _access.HasClaimAsync(ClaimNames.MCDownload))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Descarga de Documentos</h5>
+                        <a asp-page="/ManejoDeCorrespondencia/DescargaDocsSalientes" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @* Buttons *@
+    <div class="container-fluid text-center mb-md-2">
+        <a asp-page="../Index" class="btn btn-sm btn-primary" style="width: 100px;">
+            <span>Regresar</span>
+        </a>
+    </div>
+</div>

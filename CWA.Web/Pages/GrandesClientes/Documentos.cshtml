@@ -1,0 +1,166 @@
+﻿@page "{registroid:int}/{handler?}/{documentoid:int?}"
+@model CWA.Web.Pages.GrandesClientes.DocumentosModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    string aprobado = _options.Value.GrandesClientes.Strings.Aprobado;
+    string pendiente = _options.Value.GrandesClientes.Strings.NoAprobado;
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.Nombre });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<!-- link template -->
+<a id="cwa-link-template" asp-page-handler="Download" class="d-none"></a>
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCNavigationPartial" model="Model.RegistroContext" />
+
+                <ul class="list-group list-group-flush" cwa-visible="Model.ShowTemplate">
+                    <li class="list-group-item">
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12">
+                                <small class="fw-bold">Formatos Disponibles</small>
+                            </div>
+                            <div class="col-12">
+                                <a asp-page-handler="Template">Proyección Demanda y Consumo</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="card-body">
+
+                    @* Approve Form *@
+                    <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate>
+                        <div class="table-responsive mb-2">
+                            <table id="cwa-documento-table" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>@Html.DisplayNameFor(m => Model.ViewModel[0].Descripcion)</th>
+                                        <th>@Html.DisplayNameFor(m => Model.ViewModel[0].ModFecha)</th>
+                                        <th>Estatus</th>
+                                        <th>@Html.DisplayNameFor(m => Model.ViewModel[0].FechaAtencion)</th>
+                                        <th id="cwa-radio-th" class="text-center" cwa-visible="Model.ShowSelect">Seleccionar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ViewModel)
+                                    {
+                                        var current = Model.Selected.Where(w => w.Id == item.Id && !item.FechaAtencion.HasValue).FirstOrDefault();
+                                        bool pending = (current is not null);
+
+                                        <tr data-cwa-rid="@item.Id">
+                                            <td class="align-middle">
+                                                <a asp-page-handler="Download" asp-route-documentoid="@item.Id">@item.Descripcion</a>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span>@item.ModFecha.ApplyFormat(_options.Value.DateTimeFormat)</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span cwa-visible="@item.FechaAtencion.HasValue">@Html.Raw($"<i class='bi-check-circle-fill text-success'></i> {aprobado}")</span>
+                                                <span cwa-visible="@(!item.FechaAtencion.HasValue)">@Html.Raw($"<i class='bi-clock-fill text-warning'></i> {pendiente}")</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span cwa-visible="@item.FechaAtencion.HasValue">@item.FechaAtencion.Value.ApplyFormat(_options.Value.DateTimeFormat)</span>
+                                                <span cwa-visible="@(!item.FechaAtencion.HasValue)">&nbsp;</span>
+                                            </td>
+                                            <td class="text-center align-middle" cwa-visible="Model.ShowSelect">
+                                                <span cwa-visible="@(!pending)">&nbsp;</span>
+                                                @if (pending)
+                                                {
+                                                    <input class="form-check-input" type="radio" asp-for="DocumentoId" value="@item.Id" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+
+                    @* Update Form *@
+                    <form id="cwa-update-form" asp-page-handler="Update" method="post" enctype="multipart/form-data"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowUpdate">
+                        <div class="row">
+                            <div class="col-12 col-lg mb-2">
+                                <label asp-for="EditModel.DocumentoId"></label>
+                                <select id="cwa-documento-select" asp-for="EditModel.DocumentoId" class="form-select">
+                                    <option value="">Seleccione un valor...</option>
+                                    @foreach (var item in Model.DocumentosDisponibles)
+                                    {
+                                        <option value="@item.Id">@item.Mostrar</option>
+                                    }
+                                </select>
+                                <span cwa-for="EditModel.DocumentoId" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg mb-2">
+                                <label asp-for="EditModel.DocumentUpload"></label>
+                                <input id="cwa-fileupload" asp-for="EditModel.DocumentUpload" class="form-control" disabled />
+                                <span cwa-for="EditModel.DocumentUpload" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+                    </form>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center p-3">
+                        <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                            <span>Cargar</span>
+                        </button>
+                        <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                            <span>Aprobar</span>
+                        </button>
+                        <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.documentosDisponibles = @Html.Raw(Json.Serialize(Model.DocumentosDisponibles));
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(aprobado)",
+                pendiente: "@Html.Raw(pendiente)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.Strings.AprobarDatos)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+            cwa.page.userApprove = @(Model.UserApprove.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/grandesclientes/gc.documentos.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

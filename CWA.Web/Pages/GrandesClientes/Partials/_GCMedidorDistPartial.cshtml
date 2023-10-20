@@ -1,0 +1,78 @@
+﻿@model GCMedidorDistView
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Fabricante)</small>
+        <span class="d-block">@Model.Fabricante.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Modelo)</small>
+        <span class="d-block">@Model.Modelo.Blank()</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RelacionCT)</small>
+        <span class="d-block">@Model.RelacionCT.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RelacionPT)</small>
+        <span class="d-block">@Model.RelacionPT.Blank()</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Address)</small>
+        <span class="d-block">@Model.Address.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.MidTid)</small>
+        <span class="d-block">@Model.MidTid.Blank()</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Acceso)</small>
+        <span class="d-block">@Model.Acceso.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Clave)</small>
+        <span class="d-block">@Model.Clave.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <small class="fw-bold">@Html.DisplayNameFor(m => Model.Canales)</small>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col overflow-auto">
+        <table id="cwa-canal-table" class="table">
+            <thead>
+                <tr>
+                    <th><small class="fw-bold">#</small></th>
+                    <th><small class="fw-bold">Descripción</small></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (Model.Canales.Count > 0)
+                    {
+                        foreach (var item in Model.Canales)
+                        {
+                            <tr>
+                                <td>@item.Numero</td>
+                                <td>@item.Descripcion</td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

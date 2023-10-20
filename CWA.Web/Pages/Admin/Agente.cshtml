@@ -1,0 +1,14 @@
+﻿@page "{agenteid?}"
+@model CWA.Web.Pages.Admin.AgenteModel
+@{
+    ViewData["Title"] = "Agente";
+}
+
+@if (Model.AgenteId.Empty())
+{
+    <h1>New Agente</h1>
+}
+else
+{
+    <h1>Editing Agente: @Model.AgenteId</h1>
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "outputFileName": "wwwroot/esx/cwa.min.js",
+    "inputFiles": [
+      "wwwroot/esx/cwa.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.documentos.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.documentos.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.registro.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.registro.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/utils/page-dialog.min.js",
+    "inputFiles": [
+      "wwwroot/esx/utils/page-dialog.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.generales.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.generales.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.registrar.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.registrar.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.mediciondist.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.mediciondist.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.medicionsmec.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.medicionsmec.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.comercial.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.comercial.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/gc.medidordist.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/gc.medidordist.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/bootstrap-icons.min.css",
+    "inputFiles": [
+      "wwwroot/css/bootstrap-icons.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/cwa.min.css",
+    "inputFiles": [
+      "wwwroot/css/cwa.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/grandesclientes/gc.medicion.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/grandesclientes/gc.medicion.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/viabilidadcontratos/vc.enmienda.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/viabilidadcontratos/vc.enmienda.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/viabilidadcontratos/vc.nacional.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/viabilidadcontratos/vc.nacional.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/esx/pages/viabilidadcontratos/vc.regional.min.js",
+    "inputFiles": [
+      "wwwroot/esx/pages/viabilidadcontratos/vc.regional.js"
+    ]
+  }
+]

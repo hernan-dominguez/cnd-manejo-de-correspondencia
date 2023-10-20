@@ -1,0 +1,65 @@
+﻿@model PROTGeneralesView
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.DigitoVerificador)</small>
+        <span class="d-block">@Model.DigitoVerificador.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RegistroUnicoContribuyente)</small>
+        <span class="d-block">@Model.RegistroUnicoContribuyente.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Provincia)</small>
+        <span class="d-block">@Model.Provincia.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.DireccionFisica)</small>
+        <span class="d-block">@Model.DireccionFisica.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-12">
+        <small class="fw-bold">Representante Legal</small>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RLegalNombre)</small>
+        <span class="d-block">@Model.RLegalNombre.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RLegalTel)</small>
+        <span class="d-block">@Model.RLegalTel.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RLegalCorreo)</small>
+        <span class="d-block">@Model.RLegalCorreo.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-12">
+        <small class="fw-bold">Representante Protecciones</small>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RProteccionNombre)</small>
+        <span class="d-block">@Model.RProteccionNombre.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RProteccionTel)</small>
+        <span class="d-block">@Model.RProteccionTel.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RProteccionCorreo)</small>
+        <span class="d-block">@Model.RProteccionCorreo.Blank()</span>
+    </div>
+</div>

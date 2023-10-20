@@ -1,0 +1,45 @@
+﻿@model ViewPack<object>
+
+@inject IOptions<ApplicationSettings> _options
+
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                @if (Model.ContainsKey("update"))
+                {
+                    <small>@Model["update"].ToString()</small>
+                }
+            </div>
+            <div class="col-auto align-items-center">
+                @if (!Model.ContainsKey("update"))
+                {
+                    @if (Model.ContainsKey("fecha"))
+                    {
+                        var fecha = (DateTime)Model["fecha"];
+                        bool aprobacion = (bool)Model["aprobacion"];
+
+                        if (aprobacion)
+                        {
+                            <i id="cwa-approved-icon" class="bi-check-circle-fill text-success"></i>
+                            <small id="cwa-approved">@_options.Value.ViabilidadContratos.Strings.Aprobado </small>
+                            <small id="cwa-approve-date">@fecha.ApplyFormat(_options.Value.DateFormat)</small>
+                        }
+                        else
+                        {
+                            <i id="cwa-approved-icon" class="bi-exclamation-circle-fill text-danger"></i>
+                            <small id="cwa-approved">@_options.Value.ViabilidadContratos.Strings.NoAprobado </small>
+                            <small id="cwa-approve-date">@fecha.ApplyFormat(_options.Value.DateFormat)</small>
+                        }
+                    }
+                    else
+                    {
+                        <i id="cwa-approved-icon" class="bi-clock-fill text-warning"></i>
+                        <small id="cwa-approved">@_options.Value.ViabilidadContratos.Strings.Pendiente </small>
+                        <small id="cwa-approve-date"></small>
+                    }
+                }
+            </div>
+        </div>
+    </li>
+</ul>

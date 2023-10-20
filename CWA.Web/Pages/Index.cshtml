@@ -1,0 +1,73 @@
+﻿@page
+@model CWA.Web.Pages.IndexModel
+
+@inject AppAccessControlService _access 
+
+@section PageBreadcrumbsSection { 
+    <partial name="_BreadcrumbsPartial" model="new List<Breadcrumb>()" /> 
+} 
+
+<div class="container">
+    <div class="row g-3">
+
+        @if (await _access.HasClaimAsync(ClaimNames.UserGroup, GroupNames.AdminGroup))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Administración del Sitio</h5>
+                        <a asp-page="/Admin/Index" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (await _access.HasClaimAsync(ClaimNames.GCSection))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Registro de Grandes Clientes</h5>
+                        <a asp-page="/GrandesClientes/Index" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (await _access.HasClaimAsync(ClaimNames.PROTSection))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Registro de Protecciones</h5>
+                        <a asp-page="/Protecciones/Index" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (await _access.HasClaimAsync(ClaimNames.VCSection))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Viabilidad de Contratos</h5>
+                        <a asp-page="/ViabilidadContratos/Nacionales" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (await _access.HasClaimAsync(ClaimNames.MCSection))
+        {
+            <div class="col-12 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Manejo de Correspondencia</h5>
+                        <a asp-page="/ManejoDeCorrespondencia/Index" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

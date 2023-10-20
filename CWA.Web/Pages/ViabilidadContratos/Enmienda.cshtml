@@ -1,0 +1,157 @@
+﻿@page "{registroid:int?}/{handler?}/{documentoid:int?}"
+@model CWA.Web.Pages.ViabilidadContratos.EnmiendaModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    string nuevoText = Model.RegistroId.HasValue ? Model.ViewModel.Codigo : "Nueva Enmienda";
+
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = nuevoText });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Viabilidad Contratos", Link = _links.GetPathByPage("/ViabilidadContratos/Enmiendas") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_VCCardHeaderPartial" model="Model.ViewContext" />
+
+                <ul class="list-group list-group-flush border-top-0">
+                    <li class="list-group-item border-bottom-0">
+                        @if (Model.ShowView)
+                        {
+                            <partial name="_VCEnmiendaPartial" model="Model.ViewModel" />
+                        }
+
+                        @* Update Form *@
+                        @if (Model.ShowUpdate)
+                        {
+                            <form id="cwa-update-form" method="post" enctype="multipart/form-data"
+                                  data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete">
+
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="EditModel.ContratoId"></label>
+                                        <select id="cwa-contrato-select" asp-for="EditModel.ContratoId" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                            @foreach (var item in Model.Contratos)
+                                            {
+                                                <option value="@item.Id">@item.Codigo</option>
+                                            }
+                                        </select>
+                                        <span cwa-for="EditModel.ContratoId" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <label asp-for="EditModel.Inicia"></label>
+                                        <input asp-for="EditModel.Inicia" class="form-control" />
+                                        <span cwa-for="EditModel.Inicia" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <label asp-for="EditModel.Finaliza"></label>
+                                        <input asp-for="EditModel.Finaliza" class="form-control" />
+                                        <span cwa-for="EditModel.Finaliza" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+
+                                <div id="cwa-documentos" class="row">
+                                    <div class="col-12 mb-2">
+                                        <small class="fw-bold">@Html.DisplayNameFor(m => Model.EditModel.Documentos)</small>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        @* Approve Form *@
+                        <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                        </form>
+
+                        @* Reject Form *@
+                        <form id="cwa-reject-form" asp-page-handler="Reject" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+
+                            <div id="cwa-motivo-rechazo" class="container collapse">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 col-lg-8">
+                                        <label asp-for="MotivoRechazo"></label>
+                                        <textarea asp-for="MotivoRechazo" class="form-control"></textarea>
+                                        <span cwa-for="MotivoRechazo" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        @* Buttons *@
+                        <div class="container-fluid text-center p-3">
+                            <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success ms-1 me-1" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                                <span>Aprobar</span>
+                            </button>
+                            <button id="cwa-reject-button" type="button" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px; display: none;" cwa-visible="Model.ShowApprove">
+                                <span>Continuar</span>
+                            </button>
+                            <button id="cwa-rejection-button" type="button" class="btn btn-sm btn-danger ms-1 me-1" style="width: 100px;" data-bs-toggle="collapse"
+                                    data-bs-target="#cwa-motivo-rechazo" cwa-visible="Model.ShowApprove">
+                                <span>Rechazo</span>
+                            </button>
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                                <span>Guardar</span>
+                            </button>
+                            <a id="cwa-back-link" asp-page="Enmiendas" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+                @if (Model.RegistroId.HasValue)
+                {
+                    <partial name="_VCCardFooterPartial" model="Model.ViewModel.RegFecha" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.contratos = @Html.Raw(Json.Serialize(Model.Contratos.Select(t => new { t.Id, tipo = t.TipoContratoId })));
+            cwa.page.docs = {};
+            cwa.page.docs.doctipos = @Html.Raw(Json.Serialize(Model.DocTipos.Select(t => new { tipo = t.RefVal1, documento = t.RefVal2 })));
+            cwa.page.docs.documentos = @Html.Raw(Json.Serialize(Model.Documentos.Select(t => new { t.Id, t.Descripcion, accepts = $".{t.RefVal1.Replace(",", ",.")}" })));
+
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Aprobado)",
+                noaprobado: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.NoAprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Aprobar.Replace(":i", "Enmienda"))",
+                rechazar: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Rechazar.Replace(":i", "Enmienda"))"
+            };
+            cwa.page.showUpdate =  @($"{Model.ShowUpdate}".ToLower());
+            cwa.page.showApprove = @($"{Model.ShowApprove}".ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/viabilidadcontratos/vc.enmienda.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

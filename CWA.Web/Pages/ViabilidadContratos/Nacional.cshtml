@@ -1,0 +1,187 @@
+﻿@page "{registroid:int?}/{handler?}/{documentoid:int?}"
+@model CWA.Web.Pages.ViabilidadContratos.NacionalModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    string nuevoText = Model.RegistroId.HasValue ? Model.ViewModel.Codigo : "Nuevo Contrato Nacional";
+
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = nuevoText });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Viabilidad Contratos", Link = _links.GetPathByPage("/ViabilidadContratos/Nacionales") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_VCCardHeaderPartial" model="Model.RegistroContext" />
+
+                <ul class="list-group list-group-flush border-top-0">
+                    <li class="list-group-item border-bottom-0">
+                        @if (Model.ShowView)
+                        {
+                            <partial name="_VCNacionalPartial" model="Model.ViewModel" />
+                        }
+
+                        @* Update Form *@
+                        @if (Model.ShowUpdate)
+                        {
+                            <form id="cwa-update-form" method="post" enctype="multipart/form-data"
+                                  data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete">
+
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="EditModel.TipoContratoId"></label>
+                                        <select id="cwa-tipo-select" asp-for="EditModel.TipoContratoId" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                            @foreach (var item in Model.Tipos)
+                                            {
+                                                <option value="@item.Id">@item.Descripcion</option>
+                                            }
+                                        </select>
+                                        <span cwa-for="EditModel.TipoContratoId" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <label asp-for="EditModel.Inicia"></label>
+                                        <input asp-for="EditModel.Inicia" class="form-control" />
+                                        <span cwa-for="EditModel.Inicia" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <label asp-for="EditModel.Finaliza"></label>
+                                        <input asp-for="EditModel.Finaliza" class="form-control" />
+                                        <span cwa-for="EditModel.Finaliza" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="EditModel.VendedorId"></label>
+                                        <select id="cwa-vendedor-select" asp-for="EditModel.VendedorId" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                        </select>
+                                        <span cwa-for="EditModel.VendedorId" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="EditModel.CompradorId"></label>
+                                        <select id="cwa-comprador-select" asp-for="EditModel.CompradorId" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                        </select>
+                                        <span cwa-for="EditModel.CompradorId" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+
+                                <div id="cwa-documentos" class="row">
+                                    <div class="col-12 mb-2">
+                                        <small class="fw-bold">@Html.DisplayNameFor(m => Model.EditModel.Documentos)</small>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        @* Approve Form *@
+                        <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                        </form>
+
+                        @* Reject Form *@
+                        <form id="cwa-reject-form" asp-page-handler="Reject" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+
+                            <div id="cwa-motivo-rechazo" class="container collapse">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 col-lg-8">
+                                        <label asp-for="MotivoRechazo"></label>
+                                        <textarea asp-for="MotivoRechazo" class="form-control"></textarea>
+                                        <span cwa-for="MotivoRechazo" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        @* Buttons *@
+                        <div class="container-fluid text-center p-3">
+                            <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success ms-1 me-1" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                                <span>Aprobar</span>
+                            </button>
+                            <button id="cwa-reject-button" type="button" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px; display: none;" cwa-visible="Model.ShowApprove">
+                                <span>Continuar</span>
+                            </button>
+                            <button id="cwa-rejection-button" type="button" class="btn btn-sm btn-danger ms-1 me-1" style="width: 100px;" data-bs-toggle="collapse"
+                                    data-bs-target="#cwa-motivo-rechazo" cwa-visible="Model.ShowApprove">
+                                <span>Rechazo</span>
+                            </button>
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                                <span>Guardar</span>
+                            </button>
+                            <a id="cwa-back-link" asp-page="Nacionales" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+                @if (Model.RegistroId.HasValue)
+                {
+                    <partial name="_VCCardFooterPartial" model="Model.ViewModel.RegFecha" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.tipos = @Html.Raw(Json.Serialize(Model.Tipos.Select(t => new { t.Id, t.RefVal3, t.RefVal4 })));
+            cwa.page.targets = { gen: "TAG01", dist: "TAG02", gc: "TAG06" };
+
+            cwa.page.usuario = {};
+            cwa.page.usuario.gen = @Html.Raw(Json.Serialize(new { Model.UsuarioGen.Id, Model.UsuarioGen.Nombre }));
+            cwa.page.usuario.dist = @Html.Raw(Json.Serialize(new { Model.UsuarioDist.Id, Model.UsuarioDist.Nombre }));
+
+            cwa.page.agentes = {};
+            cwa.page.agentes.generadores = @Html.Raw(Json.Serialize(Model.Generadores.Select(u => new { u.Value, u.Text })));
+            cwa.page.agentes.distribuidoras = @Html.Raw(Json.Serialize(Model.Distribuidoras.Select(u => new { u.Value, u.Text })));
+            @*cwa.page.agentes.gclientes = @Html.Raw(Json.Serialize(Model.GClientes.Select(u => new { u.Value, u.Text })));*@
+            @*cwa.page.agentes.responsables = @Html.Raw(Json.Serialize(Model.Responsables.Select(u => new { rid = u.ResponsableId, gid = u.GranClienteId, gc = u.GranClienteNombre })));*@
+
+            cwa.page.docs = {};
+            cwa.page.docs.doctipos = @Html.Raw(Json.Serialize(Model.DocTipos.Select(t => new { contrato = t.RefVal1, documento = t.RefVal2 })));
+            cwa.page.docs.documentos = @Html.Raw(Json.Serialize(Model.Documentos.Select(t => new { t.Id, t.Descripcion, accepts = $".{t.RefVal1.Replace(",", ",.")}" })));
+
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Aprobado)",
+                noaprobado: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.NoAprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Aprobar.Replace(":i", "Contrato"))",
+                rechazar: "@Html.Raw(_options.Value.ViabilidadContratos.Strings.Rechazar.Replace(":i", "Contrato"))"
+            };
+            cwa.page.showUpdate =  @($"{Model.ShowUpdate}".ToLower());
+            cwa.page.showApprove = @($"{Model.ShowApprove}".ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/viabilidadcontratos/vc.nacional.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

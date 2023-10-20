@@ -1,0 +1,53 @@
+﻿@page
+@model CWA.Web.Pages.Admin.UsuariosModel
+
+@inject AppUserService _appUserService
+
+@{
+    ViewData["Title"] = "Usuarios";
+
+    var usuarios = await _appUserService.GetAppUserListingAsync();
+}
+
+<br />
+<div class="container">
+    <div class="row justify-content-end mb-3">
+        <div class="col-auto">
+            <a asp-page="Usuario" class="btn btn-primary" style="width: 100px;">Nuevo</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => usuarios[0].Nombre)</th>
+                                    <th>@Html.DisplayNameFor(m => usuarios[0].Locked)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in usuarios)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-page="Usuario" asp-route-usuarioid="@item.Id">@item.Nombre</a>
+                                        </td>
+                                        <td>
+                                            <span>@item.Locked</span>
+                                        </td>                                        
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model ViewPack<object>
+
+@inject LinkGenerator _links
+
+@{
+    var current = $"{Model["current"]}";
+    var regionales = (bool)Model["regionales"];
+}
+
+@functions {
+    bool Inactive(string target, string current) { return target != current; }
+}
+
+<div class="card-header bg-white">
+    <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+            @if (Inactive("nacionales", current))
+            {
+                <a asp-page="Nacionales" class="nav-link">
+                    <i class="bi-flag d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Nacionales</span>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled">Nacionales</span>
+            }
+        </li>
+
+        @if (regionales)
+        {
+            <li class="nav-item">
+                @if (Inactive("regionales", current))
+                {
+                    <a asp-page="Regionales" class="nav-link">
+                        <i class="bi-globe2 d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Regionales</span>
+                    </a>
+                }
+                else
+                {
+                    <span class="nav-link active disabled">Regionales</span>
+                }
+            </li>
+        }
+        <li class="nav-item">
+            @if (Inactive("enmiendas", current))
+            {
+                <a asp-page="Enmiendas" class="nav-link">
+                    <i class="bi-pencil-square d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enmiendas</span>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled">Enmiendas</span>
+            }
+        </li>
+    </ul>
+</div>

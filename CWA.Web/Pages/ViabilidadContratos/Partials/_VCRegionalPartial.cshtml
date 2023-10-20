@@ -1,0 +1,63 @@
+﻿@model VCRegionalView
+
+@inject IOptions<ApplicationSettings> _options
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Codigo)</small>
+        <span class="d-block">@Model.Codigo</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Solicitud)</small>
+        <span class="d-block">@Model.Solicitud - @Model.Transaccion</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Solicitante)</small>
+        <span class="d-block">@Model.Solicitante</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.ContraparteNombre)</small>
+        <span class="d-block">@Model.ContraparteNombre</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Inicia)</small>
+        <span class="d-block">@Model.Inicia.ToString(_options.Value.DateFormat)</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Finaliza)</small>
+        <span class="d-block">@Model.Finaliza.ToString(_options.Value.DateFormat)</span>
+    </div>
+</div>
+<div id="cwa-regional-docs" class="row">
+    <div class="col-12">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.Documentos)</small>
+    </div>
+    @foreach (var item in Model.Documentos.OrderBy(o => o.SortOrder).ToList())
+    {
+        <div class="col-12">
+            <a class="cwa-no-underline" asp-page-handler="Download" asp-route-documentoid="@item.Id">@item.Descripcion</a>
+        </div>
+    }
+</div>
+@if (Model.Aprobacion.HasValue && !Model.Aprobacion.Value)
+{
+    <div class="row mt-3">
+        <div class="col-12">
+            <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.MotivoRechazo)</small>
+            <span>@Model.MotivoRechazo</span>
+        </div>
+    </div>
+}
+else
+{
+    <div id="cwa-motivo-div" class="row mt-3 d-none">
+        <div class="col-12">
+            <small class="d-block fw-bold">@Html.DisplayNameFor(m => m.MotivoRechazo)</small>
+            <span id="cwa-motivo-span"></span>
+        </div>
+    </div>
+}

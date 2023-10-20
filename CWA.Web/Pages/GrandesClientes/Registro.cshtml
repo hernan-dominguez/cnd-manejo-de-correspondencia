@@ -1,0 +1,146 @@
+﻿@page "{registroid:int}/{handler?}"
+@model CWA.Web.Pages.GrandesClientes.RegistroModel
+
+@inject LinkGenerator _links
+@inject IOptions<ApplicationSettings> _options
+
+@{
+    bool autorizado = Model.RegistroContext.ContainsKey("autorizado");
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.Nombre });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });    
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCNavigationPartial" model="Model.RegistroContext" />
+                <partial name="_GCCardHeaderPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto col-md-4">
+
+                            @* Update Form *@
+                            <form id="cwa-update-form" asp-page-handler="Update" method="post"
+                                  data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" cwa-visible="Model.ShowUpdate">
+                                <label asp-for="FechaEntrada"></label>
+                                <input asp-for="FechaEntrada" class="form-control" style="width: 190px;" />
+                            </form>
+
+                            <div cwa-visible="!Model.ShowUpdate">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.FechaEntrada)</small>
+                                <span class="d-block" cwa-visible="Model.FechaEntrada.HasValue">@Model.FechaEntrada.Value.ApplyFormat(_options.Value.DateFormat)</span>
+                                <span class="d-block" cwa-visible="!Model.FechaEntrada.HasValue">@_options.Value.GrandesClientes.Strings.NoRegistrado</span>
+                            </div>
+                        </div>
+                        <div id="cwa-fecha-estatus" class="col-auto col-md-4" cwa-visible="Model.FechaEntrada.HasValue">
+                            <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.Estatus)</small>
+                            <span class="d-block" cwa-visible="!autorizado">@_options.Value.GrandesClientes.Strings.Programada</span>
+                            <span class="d-block" cwa-visible="autorizado">@_options.Value.GrandesClientes.Strings.Efectiva</span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item pt-3">
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.Nombre)</small>
+                                <span class="d-block">@Model.ViewModel.Nombre</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.Tipo)</small>
+                                <span class="d-block">@Model.ViewModel.Tipo</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2" cwa-visible="Model.ShowAgente">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.Registrante)</small>
+                                <span class="d-block">@Model.ViewModel.Registrante</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <small class="fw-bold">Información de Contacto</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.ContactoNombre)</small>
+                                <span class="d-block">@Model.ViewModel.ContactoNombre</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.ContactoTelefono)</small>
+                                <span class="d-block">@Model.ViewModel.ContactoTelefono</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.ContactoCorreo)</small>
+                                <span class="d-block">@Model.ViewModel.ContactoCorreo</span>
+                            </div>
+                        </div>
+
+                        @* Notify Form *@
+                        <form id="cwa-notify-form" asp-page-handler="Notify" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowNotify">
+                        </form>
+
+                        @* Buttons *@
+                        <div class="container-fluid text-center mb-2">
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                                <span>Guardar</span>
+                            </button>
+                            <button id="cwa-notify-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowNotify">
+                                <span>Notificar</span>
+                            </button>
+                            <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+                @* Footer *@
+                <partial name="_GCCardFooterPartial" model="Model.ViewModel.ModFecha" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowNotify)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(_options.Value.GrandesClientes.Strings.Autorizado)",
+                programada: "@Html.Raw(_options.Value.GrandesClientes.Strings.Programada)",
+                condicion: "@Html.DisplayNameFor(m => Model.ViewModel.Estatus)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                notificar: "@Html.Raw(_options.Value.Strings.Notificar)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showNotify = @(Model.ShowNotify.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/grandesclientes/gc.registro.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

@@ -1,0 +1,47 @@
+﻿@model ViewPack<object>
+
+@inject LinkGenerator _links;
+
+@{     
+    //bool showMedidor = Model.ContainsKey("medidor");
+    //bool showComercial = Model.ContainsKey("comercial");
+
+    var current = _links.GetPathByPage(Context);
+    var registro = _links.GetPathByPage("/Protecciones/Registro", null, new { registroid = Model["registroid"] } );
+    var generales = _links.GetPathByPage("/Protecciones/Generales", null, new { registroid = Model["registroid"], generalesid = Model["generalesid"] });
+    var documentos = _links.GetPathByPage("/Protecciones/Documentos", null, new { registroid = Model["registroid"] });
+    var plantillas = _links.GetPathByPage("/Protecciones/Plantillas", null, new { registroid = Model["registroid"] });
+}
+
+@functions {
+    string Active(string link, string current) { return link == current ? "active" : ""; }
+}
+
+<div class="card-header bg-white">
+    <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+            <a asp-page="Registro" asp-route-registroid="@Model["registroid"]" class="nav-link @Active(registro, current)">
+                <span class="d-none d-md-inline">Registro</span>
+                <i class="bi-file-earmark-text d-md-none ms-md-1"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a asp-page="Generales" asp-route-registroid="@Model["registroid"]" asp-route-generalesid="@Model["generalesid"]" class="nav-link @Active(generales, current)">
+                <span class="d-none d-md-inline">Generales</span>
+                <i class="bi-file-earmark-text d-md-none ms-md-1"></i>
+            </a>
+        </li>
+        <li class="nav-item" cwa-visible="@Model["generalaprovado"]">
+            <a asp-page="Documentos" asp-route-registroid="@Model["registroid"]" class="nav-link @Active(documentos, current)">
+                <span class="d-none d-md-inline">Documentos</span>
+                <i class="bi-folder d-md-none ms-md-1"></i>
+            </a>
+        </li>
+        <li class="nav-item" cwa-visible="@Model["generalaprovado"]">
+            <a asp-page="Plantillas" asp-route-registroid="@Model["registroid"]" class="nav-link @Active(plantillas, current)">
+                <span class="d-none d-md-inline">Plantillas</span>
+                <i class="bi-folder d-md-none ms-md-1"></i>
+            </a>
+        </li>
+    </ul>
+</div>

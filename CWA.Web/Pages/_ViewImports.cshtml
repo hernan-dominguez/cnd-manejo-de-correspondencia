@@ -1,0 +1,44 @@
+﻿@* Access control *@
+@using CWA.AccessControl.Constants
+@using CWA.AccessControl.Services
+@using CWA.AccessControl.Authorization.Sections
+@using CWA.AccessControl.Authorization.GrandesClientes
+@using CWA.AccessControl.Authorization.Protecciones
+
+@* Services *@
+@using CWA.Application.Services.Bases
+@using CWA.Application.Services.Comun;
+@using CWA.Application.Services.Identity
+@using CWA.Application.Services.GrandesClientes
+@using CWA.Application.Services.Protecciones
+@using CWA.Application.Services.ViabilidadContratos
+
+@* Models *@
+@using CWA.Models.Comun
+@using CWA.Models.Identity
+@using CWA.Models.GrandesClientes.Edit
+@using CWA.Models.GrandesClientes.View
+@using CWA.Models.Protecciones.Edit
+@using CWA.Models.Protecciones.View
+@using CWA.Models.ViabilidadContratos.View
+
+@* Entities *@
+@using CWA.Entities.Comun
+@using CWA.Entities.Identity
+@using CWA.Entities.GrandesClientes
+@using CWA.Entities.Protecciones
+@using CWA.Entities.ViabilidadContratos
+
+@* Others *@
+@using CWA.Web.Settings
+@using CWA.Web.Extensions
+@using CWA.Shared.Helpers
+@using CWA.Shared.Extensions
+@addTagHelper *, CWA.Web
+
+@* Platform *@
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Routing
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

@@ -1,0 +1,58 @@
+﻿@page "{registroid:int}/{handler?}/{documentoid:int?}"
+@model CWA.Web.Pages.Protecciones.PlantillasModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links;
+
+@{
+    string aprobado = _options.Value.Protecciones.Strings.ItemAprobado.Aprobado;
+    string pendiente = _options.Value.Protecciones.Strings.ItemAprobado.Pendiente;
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.RazonSocial });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Proyectos", Link = _links.GetPathByPage("/Protecciones/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<!-- link template -->
+<a id="cwa-link-template" asp-page-handler="Download" class="d-none"></a>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_PROTNavigationPartial" model="Model.InformationContext" />
+
+                <div class="card-body">
+
+                    <div class="table-responsive mb-2">
+                        <table id="cwa-documento-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].Descripcion)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(m => Model.ViewModel[0].ModFecha)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ViewModel)
+                                {
+                                    <tr data-cwa-rid="@item.Id">
+                                        <td class="align-middle">
+                                            <a asp-page-handler="Download" asp-route-plantillaid="@item.Id">@item.Descripcion</a>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <span>@item.ModFecha.ToString(_options.Value.DateTimeFormat)</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

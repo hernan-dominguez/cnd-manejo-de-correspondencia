@@ -1,0 +1,75 @@
+﻿@page "{registroid:int}"
+@model CWA.Web.Pages.GrandesClientes.MedidoresDistModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    string aprobado = _options.Value.GrandesClientes.Strings.Aprobado;
+    string pendiente = _options.Value.GrandesClientes.Strings.NoAprobado;
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.Nombre });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCNavigationPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    <div class="table-responsive mb-2">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].Serie)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].Origen)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].ModFecha)</th>
+                                    <th>Estatus</th>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].FechaAprobacion)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ViewModel)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a asp-page="MedidorDist" asp-route-registroid="@Model.RegistroId" asp-route-medidorid="@item.Id">@item.Serie</a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span>@item.Origen</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span>@item.ModFecha.ApplyFormat(_options.Value.DateTimeFormat)</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span cwa-visible="@item.FechaAprobacion.HasValue">@Html.Raw($"<i class='bi-check-circle-fill text-success'></i> {aprobado}")</span>
+                                            <span cwa-visible="@(!item.FechaAprobacion.HasValue)">@Html.Raw($"<i class='bi-clock-fill text-warning'></i> {pendiente}")</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span cwa-visible="@item.FechaAprobacion.HasValue">@item.FechaAprobacion.Value.ApplyFormat(_options.Value.DateTimeFormat)</span>
+                                            <span cwa-visible="@(!item.FechaAprobacion.HasValue)">&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center mb-2">
+                        <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

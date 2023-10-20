@@ -1,0 +1,200 @@
+﻿@page "{registroid:int}/{generalesid:int}/{handler?}"
+@model CWA.Web.Pages.GrandesClientes.GeneralesModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.Nombre });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });
+
+    string aprobado = _options.Value.GrandesClientes.Strings.Aprobado;
+
+    // Phone formats
+    string t1 = "<div>Ej.Tel. 222-2222; 6222-2222</div>";
+    string t2 = "<div>Ej.Ext. 222-0000 ext. 12345</div>";
+    string tooltip = $"<small>{t1}{t2}</small>";
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCNavigationPartial" model="Model.RegistroContext" />
+                <partial name="_GCCardHeaderPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    @if (Model.ShowView)
+                    {
+                        <partial name="_GCGeneralesPartial" model="Model.ViewModel" />
+                    }
+
+                    @* Update Form *@
+                    <form id="cwa-update-form" asp-page-handler="Update" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowUpdate">
+
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <label asp-for="EditModel.RazonSocial"></label>
+                                <input asp-for="EditModel.RazonSocial" class="form-control" />
+                                <span cwa-for="EditModel.RazonSocial" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.Ruc"></label>
+                                <input asp-for="EditModel.Ruc" class="form-control" />
+                                <span cwa-for="EditModel.Ruc" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.Digito"></label>
+                                <input asp-for="EditModel.Digito" class="form-control" />
+                                <span cwa-for="EditModel.Digito" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.ProvinciaId"></label>
+                                <select asp-for="EditModel.ProvinciaId" class="form-select" asp-items="Model.Provincias">
+                                    <option value="">Seleccione un elemento...</option>
+                                </select>
+                                <span cwa-for="EditModel.ProvinciaId" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-md-8 mb-2">
+                                <label asp-for="EditModel.Direccion"></label>
+                                <textarea asp-for="EditModel.Direccion" class="form-control" rows="1"></textarea>
+                                <span cwa-for="EditModel.Direccion" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.Telefono"></label>
+                                <input asp-for="EditModel.Telefono" class="form-control" cwa-tooltip="@tooltip" />
+                                <span cwa-for="EditModel.Telefono" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-md-8 mb-2">
+                                <label asp-for="EditModel.WebUrl">Sitio Web</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">http://</span>
+                                    <input asp-for="EditModel.WebUrl" class="form-control" />
+                                </div>
+                                <span cwa-for="EditModel.WebUrl" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <small class="fw-bold">Representante Legal</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.LegalNombre"></label>
+                                <input asp-for="EditModel.LegalNombre" class="form-control" />
+                                <span cwa-for="EditModel.LegalNombre" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.LegalTelefono"></label>
+                                <input asp-for="EditModel.LegalTelefono" class="form-control" cwa-tooltip="@tooltip" />
+                                <span cwa-for="EditModel.LegalTelefono" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.LegalCorreo"></label>
+                                <input asp-for="EditModel.LegalCorreo" class="form-control" />
+                                <span cwa-for="EditModel.LegalCorreo" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <small class="fw-bold">Contacto Smec</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.SmecNombre"></label>
+                                <input asp-for="EditModel.SmecNombre" class="form-control" />
+                                <span cwa-for="EditModel.SmecNombre" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.SmecTelefono"></label>
+                                <input asp-for="EditModel.SmecTelefono" class="form-control" cwa-tooltip="@tooltip" />
+                                <span cwa-for="EditModel.SmecTelefono" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.SmecCorreo"></label>
+                                <input asp-for="EditModel.SmecCorreo" class="form-control" />
+                                <span cwa-for="EditModel.SmecCorreo" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+                    </form>
+
+                    @* Approve Form *@
+                    <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                    </form>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center p-2">
+                        <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                            <span>Guardar</span>
+                        </button>
+                        <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                            <span>Aprobar</span>
+                        </button>
+                        <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                @* Footer *@
+                <partial name="_GCCardFooterPartial" model="Model.LastSave" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Tooltips
+            cwa.bstooltips();
+
+            // Page script properties
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(aprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.Strings.AprobarDatos)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+            cwa.page.showView = @(Model.ShowView.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/grandesclientes/gc.generales.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

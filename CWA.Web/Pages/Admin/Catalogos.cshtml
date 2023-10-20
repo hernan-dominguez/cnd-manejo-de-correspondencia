@@ -1,0 +1,129 @@
+﻿@page
+@model CWA.Web.Pages.Admin.CatalogosModel
+
+@inject CatalogoService _catalogoService
+
+@{
+    ViewData["Title"] = "Catálogos";
+}
+
+<br />
+<div class="container-fluid">
+    <div class="row justify-content-between mb-3">
+        <div class="col-auto">
+            <form method="get">
+                <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+                <input type="hidden" name="SortOrder" value="@Model.CurrentSort" />
+                <input type="submit" value="Search" class="btn btn-success" /> |
+                <a asp-page="Catalogos">Back to full List</a>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a asp-page="Catalogo" class="btn btn-primary" style="width: 100px;">Nuevo</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a asp-page="Catalogos" asp-route-sortorder="@Model.IdSort" asp-route-searchstring="@Model.CurrentFilter">
+                                            @Html.DisplayNameFor(m => Model.CatalogoList[0].Id)
+
+                                            @if (Model.CurrentSort == "id")
+                                            {
+                                                <i class="bi-arrow-up"></i>
+                                            }
+                                            @if (Model.CurrentSort == "id_desc")
+                                            {
+                                                <i class="bi-arrow-down"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-page="Catalogos" asp-route-sortorder="@Model.GrupoSort" asp-route-searchstring="@Model.CurrentFilter">
+                                            @Html.DisplayNameFor(m => Model.CatalogoList[0].Grupo)
+
+                                            @if (Model.CurrentSort == "grupo")
+                                            {
+                                                <i class="bi-caret-up-fill"></i>
+                                            }
+                                            @if (Model.CurrentSort == "grupo_desc")
+                                            {
+                                                <i class="bi-caret-down-fill"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-page="Catalogos" asp-route-sortorder="@Model.DescripcionSort" asp-route-searchstring="@Model.CurrentFilter">
+                                            @Html.DisplayNameFor(m => Model.CatalogoList[0].Descripcion)
+
+                                            @if (Model.CurrentSort == "descripcion")
+                                            {
+                                                <i class="bi-arrow-up-short"></i>
+                                            }
+                                            @if (Model.CurrentSort == "descripcion_desc")
+                                            {
+                                                <i class="bi-arrow-down-short"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>@Html.DisplayNameFor(m => Model.CatalogoList[0].RefVal1)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.CatalogoList[0].RefVal2)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.CatalogoList[0].RefVal3)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.CatalogoList[0].RefVal4)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.CatalogoList[0].RefVal5)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.CatalogoList)
+                                {
+                                    <tr>
+                                        <td style="width: 5%">
+                                            <a asp-page="Catalogo" asp-route-catalogoid="@item.Id">@item.Id</a>
+                                        </td>
+                                        <td style="width: 20%"><span>@item.Grupo</span></td>
+                                        <td style="width: 25%"><span>@item.Descripcion</span></td>
+                                        <td style="width: 10%"><span>@item.RefVal1</span></td>
+                                        <td style="width: 10%"><span>@item.RefVal2</span></td>
+                                        <td style="width: 10%"><span>@item.RefVal3</span></td>
+                                        <td style="width: 10%"><span>@item.RefVal4</span></td>
+                                        <td style="width: 10%"><span>@item.RefVal5</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @{
+                            var prevDisabled = !Model.CatalogoList.HasPreviousPage ? "disabled" : "";
+                            var nextDisabled = !Model.CatalogoList.HasNextPage ? "disabled" : "";
+                        }
+
+                        <a asp-page="Catalogos"
+                           asp-route-sortorder="@Model.CurrentSort"
+                           asp-route-pageindex="@(Model.CatalogoList.PageIndex - 1)"
+                           asp-route-searchstring="@Model.CurrentFilter"
+                           class="btn btn-primary @prevDisabled">
+                            Previous
+                        </a>
+                        <span class="fw-bold">&nbsp;@(Model.CatalogoList.PageIndex)&nbsp;</span>
+                        <a asp-page="Catalogos"
+                           asp-route-sortorder="@Model.CurrentSort"
+                           asp-route-pageindex="@(Model.CatalogoList.PageIndex + 1)"
+                           asp-route-searchstring="@Model.CurrentFilter"
+                           class="btn btn-primary @nextDisabled">
+                            Next
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

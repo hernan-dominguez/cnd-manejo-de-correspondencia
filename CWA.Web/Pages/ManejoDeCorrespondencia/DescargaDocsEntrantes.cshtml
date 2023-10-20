@@ -1,0 +1,66 @@
+﻿@page "{documentoid?}"
+@model CWA.Web.Pages.ManejoDeCorrespondencia.DescargaDocsEntrantes
+
+@inject IOptions<ApplicationSettings> _options
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = "Descarga de Documentos" });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_MCNavigationPartial" model="Model.RegistroContext" />
+                <div class="card-body">
+                    <div class="table-responsive mb-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].Nombre)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].NumeroDeNota)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].Fecha)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ViewModel)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a asp-page-handler="Download" asp-route-documentoid="@item.Id">@item.Nombre</a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span>@item.NumeroDeNota</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span>@item.Fecha</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center mb-md-2">
+                        <a asp-page="/ManejoDeCorrespondencia/Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿@page
+@model CWA.Web.Pages.Protecciones.IndexModel
+
+@inject IOptions<ApplicationSettings> _options
+
+@{
+    //for (int item = 0; item < Model.ViewModel.Count; item++)
+    //{
+    //    Model.ViewModel[item].FechaEstatus = Model.ViewModel[item].FechaEfectiva
+    //        ? _options.Value.Protecciones.Strings.FechaEstatus.Efectiva
+    //        : Model.ViewModel[item].FechaEntrada.HasValue
+    //            ? _options.Value.Protecciones.Strings.FechaEstatus.Programada
+    //            : _options.Value.Protecciones.Strings.FechaEstatus.Indefinida;
+    //}
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = "Proyectos" });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="table-responsive mb-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].RazonSocial)
+                                    </th>
+                                    <th class="text-center">
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].Tipo)
+                                    </th>
+                                    @*<th class="text-center" cwa-visible="Model.ShowResponsable">
+                                            @Html.DisplayNameFor(m => Model.ViewModel[0].Responsable)
+                                        </th>
+                                        <th class="text-center" cwa-visible="Model.ShowUsuario">
+                                            @Html.DisplayNameFor(m => Model.ViewModel[0].Usuario)
+                                        </th>*@
+                                    @*<th class="text-center">
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].FechaEstatus)
+                                    </th>*@
+                                    @*<th class="text-center">
+                                        @Html.DisplayNameFor(m => Model.ViewModel[0].FechaAprobacion)
+                                    </th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ViewModel)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a asp-page="Registro" asp-route-registroid="@item.Id" cwa-visible="Model.CanView">@item.RazonSocial</a>
+                                            <span cwa-visible="!Model.CanView">@item.RazonSocial</span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <span>@item.Tipo</span>
+                                        </td>
+                                        @*<td class="text-center align-middle" cwa-visible="Model.ShowResponsable">
+                                                <span>@item.Responsable</span>
+                                            </td>
+                                            <td class="text-center align-middle" cwa-visible="Model.ShowUsuario">
+                                                <span>@item.Usuario</span>
+                                            </td>*@
+                                        @*<td class="text-center align-middle">
+                                            <span>@item.FechaEstatus</span>
+                                        </td>*@
+                                        @*<td class="text-center align-middle">
+                                            <span>@(item.FechaAprobacion.HasValue ? item.FechaAprobacion.Value.ToString(_options.Value.DateFormat) : "".Blank())</span>
+                                        </td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="container-fluid text-center mb-md-2">
+                        <a asp-page="Registrar" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.CanCreate">
+                            <i class="bi-plus-circle"></i>&nbsp;Nuevo
+                        </a>
+                        <a asp-page="/Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

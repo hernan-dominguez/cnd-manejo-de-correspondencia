@@ -1,0 +1,15 @@
+﻿@page "{catalogoid?}"
+@model CWA.Web.Pages.Admin.CatalogoModel
+
+@{
+    ViewData["Title"] = "Catálogo";
+}
+
+@if (Model.CatalogoId.Empty())
+{
+    <h1>New Catalogo</h1>
+}
+else
+{
+    <h1>Editing Catalogo: @Model.CatalogoId</h1>
+}

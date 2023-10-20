@@ -1,0 +1,111 @@
+﻿@page "{registroid:int?}"
+@model CWA.Web.Pages.Protecciones.RegistrarModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.RegistroId.HasValue ? Model.EditModel.RazonSocial : "Nuevo Registro" });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Proyectos", Link = _links.GetPathByPage("/Protecciones/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <form id="cwa-update-form" method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <small class="fw-bold">Datos requeridos para activación del registro</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-5 mb-3">
+                                <label asp-for="EditModel.RazonSocial"></label>
+                                <input asp-for="EditModel.RazonSocial" class="form-control" />
+                                <span cwa-for="EditModel.RazonSocial" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-5 mb-3">
+                                <label asp-for="EditModel.UsuarioID">Usuario</label>
+                                <select id="cwa-agente-select" asp-for="EditModel.UsuarioID" class="form-select" asp-items="Model.Usuarios">
+                                    <option value="">Seleccione un Usuario...</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-2 mb-3">
+                                <label asp-for="EditModel.TipoAgenteId">Tipo</label>
+                                <select id="cwa-tipo-select" asp-for="EditModel.TipoAgenteId" class="form-select" asp-items="Model.Tipos">
+                                    <option value="">Seleccione un Tipo...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <small class="fw-bold">Información de Contacto</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.ContactoNombre"></label>
+                                <input asp-for="EditModel.ContactoNombre" class="form-control" />
+                                <span cwa-for="EditModel.ContactoNombre" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.ContactoTelefono"></label>
+                                <input asp-for="EditModel.ContactoTelefono" class="form-control" />
+                                <span cwa-for="EditModel.ContactoTelefono" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.ContactoCorreo"></label>
+                                <input asp-for="EditModel.ContactoCorreo" class="form-control" />
+                                <span cwa-for="EditModel.ContactoCorreo" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid text-center p-2">
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-1" style="width: 100px;">
+                                <span>Guardar</span>
+                            </button>
+                            <a id="cwa-back-link" asp-page="Index" class="btn btn-sm btn-primary ms-1" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageScriptSection {
+    <script>
+        // Page script properties
+        cwa.page.editing = @Model.RegistroId.HasValue.ToString().ToLower();
+
+        cwa.page.strings = { guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)" };
+
+        // Page dialog properties
+        cwa.dialog.parameters = {
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+        };
+    </script>
+
+    @* Page specific scripts *@
+    <script src="~/esx/pages/protecciones/prot.registrar.js" asp-append-version="true"></script>
+
+    @* Dialog scripts *@
+    <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+}

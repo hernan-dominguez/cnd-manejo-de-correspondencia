@@ -1,0 +1,99 @@
+﻿@page
+@model CWA.Web.Pages.ViabilidadContratos.RegionalesModel
+
+@inject IOptions<ApplicationSettings> _options
+
+@{
+    string aprobado = _options.Value.ViabilidadContratos.Strings.Aprobado;
+    string noaprobado = _options.Value.ViabilidadContratos.Strings.NoAprobado;
+    string pendiente = _options.Value.ViabilidadContratos.Strings.Pendiente;
+
+    // Breadcrumbs
+    ViewData["bc-fluid"] = true;
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = "Viabilidad Contratos" });
+
+    // Buttons
+    ViewPack<object> ButtonsModel = new("show", Model.CanCreate);
+    ButtonsModel.Add("create", "Regional");
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_VCNavigationPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    <div class="table-responsive mb-2">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => Model.ViewModel[0].Codigo)</th>
+                                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Transaccion)</th>
+                                    @if (Model.ShowMore)
+                                    {
+                                        <th class="d-none d-xl-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Solicitante)</th>
+                                    }
+                                    <th class="d-none d-xl-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Contraparte)</th>
+                                    <th class="d-none d-xxl-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Pais)</th>
+                                    <th class="d-none d-lg-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Inicia)</th>
+                                    <th class="d-none d-lg-table-cell">@Html.DisplayNameFor(m => Model.ViewModel[0].Finaliza)</th>
+                                    <th class="text-center text-sm-start">Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ViewModel)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a asp-page="Regional" asp-route-registroid="@item.Id" cwa-visible="Model.CanView">@item.Codigo</a>
+                                            <span cwa-visible="!Model.CanView">@item.Codigo</span>
+                                        </td>
+                                        <td class="align-middle d-none d-md-table-cell">
+                                            <span>@item.Transaccion</span>
+                                        </td>
+                                        @if (Model.ShowMore)
+                                        {
+                                            <td class="align-middle d-none d-xl-table-cell">
+                                                <span>@item.Solicitante</span>
+                                            </td>
+                                        }
+                                        <td class="align-middle d-none d-xl-table-cell">
+                                            <span>@item.Contraparte</span>
+                                        </td>
+                                        <td class="align-middle d-none d-xxl-table-cell">
+                                            <span>@item.Pais</span>
+                                        </td>
+                                        <td class="align-middle d-none d-lg-table-cell">
+                                            <span>@item.Inicia.ApplyFormat(_options.Value.DateFormat)</span>
+                                        </td>
+                                        <td class="align-middle d-none d-lg-table-cell">
+                                            <span>@item.Finaliza.ApplyFormat(_options.Value.DateFormat)</span>
+                                        </td>
+                                        <td class="align-middle d-none d-sm-table-cell">
+                                            <span cwa-visible="@(item.Aprobacion.HasValue && item.Aprobacion.Value)"><i class="bi-check-circle-fill text-success"></i> @(aprobado)</span>
+                                            <span cwa-visible="@(item.Aprobacion.HasValue && !item.Aprobacion.Value)"><i class="bi-exclamation-circle-fill text-danger"></i> @(noaprobado)</span>
+                                            <span cwa-visible="@(!item.Aprobacion.HasValue)"><i class="bi-clock-fill text-warning"></i> @(pendiente)</span>
+                                        </td>
+                                        <td class="text-center text-sm-start d-table-cell d-sm-none">
+                                            <span cwa-visible="@(item.Aprobacion.HasValue && item.Aprobacion.Value)"><i class="bi-check-circle-fill text-success"></i></span>
+                                            <span cwa-visible="@(item.Aprobacion.HasValue && !item.Aprobacion.Value)"><i class="bi-exclamation-circle-fill text-danger"></i></span>
+                                            <span cwa-visible="@(!item.Aprobacion.HasValue)"><i class="bi-clock-fill text-warning"></i></span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <partial name="_VCMainButtonsPartial" model="ButtonsModel" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

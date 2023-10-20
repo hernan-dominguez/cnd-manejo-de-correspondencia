@@ -1,0 +1,72 @@
+﻿@model ViewPack<object>
+
+@inject IOptions<ApplicationSettings> _options
+
+@{
+    bool registro = (bool)Model["registro"];
+
+    string aprobado = "";
+    string pendiente = "";
+    
+    string texto = texto = Model.ContainsKey("texto") ? Model["texto"] as string : "";
+    DateTime? fecha = Model["fechaaprobacion"] as DateTime?;
+
+    if (registro)
+    {
+        aprobado = _options.Value.Protecciones.Strings.Autorizado;
+        pendiente = _options.Value.Protecciones.Strings.NoAutorizado;
+    }
+    else {
+
+        aprobado = _options.Value.Protecciones.Strings.ItemAprobado.Aprobado;
+        pendiente = _options.Value.Protecciones.Strings.ItemAprobado.Pendiente;
+    }
+}
+
+@if (fecha.HasValue)
+{
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row g-1 justify-content-end">
+                <div class="col-auto">
+                    <small id="cwa-approved">@aprobado</small> 
+                    <small id="cwa-approve-date">@fecha.Value.ToString(_options.Value.DateTimeFormat)</small>
+                </div>
+                <div class="col-auto align-items-center">
+                    <i id="cwa-approved-icon" class="bi-check-circle-fill text-success" style="font-size: 1.1em;"></i>
+                </div>
+            </div>
+        </li>
+    </ul>
+}
+else
+{
+    @if (!Model.ContainsKey("texto"))
+    {
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row g-1 justify-content-end">
+                    <div class="col-auto">
+                        <small id="cwa-approved">@pendiente</small>
+                        <small id="cwa-approve-date"></small>
+                    </div>
+                    <div class="col-auto align-items-center">
+                        <i id="cwa-approved-icon" class="bi-clock-fill text-warning" style="font-size: 1.1em;"></i>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    }
+    else
+    {
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row g-1 justify-content-start">
+                    <div class="col-auto">
+                        <span>@texto</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    }
+}

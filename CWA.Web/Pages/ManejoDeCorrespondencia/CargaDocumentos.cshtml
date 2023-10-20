@@ -1,0 +1,203 @@
+﻿@page "{registroid:int?}/{handler?}/{documentoid:int?}"
+@model CWA.Web.Pages.ManejoDeCorrespondencia.CargaDocumentosModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    string nuevoText = "Carga de Notas y Documentos";
+
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = nuevoText });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Manejo de Correspondencia", Link = _links.GetPathByPage("/ManejoDeCorrespondencia/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row justify-content-between">
+                            <div class="col-auto">
+                                <small>Carga de Notas y Documentos</small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-flush border-top-0">
+                    <li class="list-group-item border-bottom-0">
+                        <form id="cwa-update-form" method="post" enctype="multipart/form-data"
+                                data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.NuevoDocRespuesta"></label>
+                                    <select id="cwa-nuevodocresp-select" asp-for="MCCargaDocumentosModel.NuevoDocRespuesta" class="form-select">
+                                        <option value="">Seleccione un valor...</option>
+                                        @foreach (var item in Model.NuevoDocRespuesta)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+                                    </select>
+                                    <span cwa-for="MCCargaDocumentosModel.NuevoDocRespuesta" class="text-danger cwa-small"></span>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.RespuestaNotaSaliente"></label>
+                                    <select id="cwa-docorig-select" asp-for="MCCargaDocumentosModel.RespuestaNotaSaliente" class="form-select">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="MCCargaDocumentosModel.RespuestaNotaSaliente" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            @* Campos Agente ETESA *@
+                            @if (Model.TipoAgente.Equals("ETESA"))
+                            {
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="MCCargaDocumentosModel.TipoDocumentoId"></label>
+                                        <select id="cwa-tipodoc-select" asp-for="MCCargaDocumentosModel.TipoDocumentoId" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                            @foreach (var item in Model.TiposDocumento)
+                                            {
+                                                <option value="@item">@item</option>
+                                            }
+                                        </select>
+                                        <span cwa-for="MCCargaDocumentosModel.TipoDocumentoId" class="text-danger cwa-small"></span>
+                                    </div>
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <label asp-for="MCCargaDocumentosModel.DireccionETESA"></label>
+                                        <select id="cwa-diretesa-select" asp-for="MCCargaDocumentosModel.DireccionETESA" class="form-select">
+                                            <option value="">Seleccione un valor...</option>
+                                            @foreach (var item in Model.DireccionesETESA)
+                                            {
+                                                <option value="@item.Id">@item.Valor</option>
+                                            }
+                                        </select>
+                                        <span cwa-for="MCCargaDocumentosModel.DireccionETESA" class="text-danger cwa-small"></span>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.Tema"></label>
+                                    <select id="cwa-tema-select" asp-for="MCCargaDocumentosModel.Tema" class="form-select">
+                                        <option value="">Seleccione un valor...</option>
+                                        @foreach (var item in Model.Temas)
+                                        {
+                                            <option value="@item.Id">@item.Valor</option>
+                                        }
+                                    </select>
+                                    <span cwa-for="MCCargaDocumentosModel.Tema" class="text-danger cwa-small"></span>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.Subtema"></label>
+                                    <select id="cwa-subtema-select" asp-for="MCCargaDocumentosModel.Subtema" class="form-select">
+                                        <option value="">Seleccione un valor...</option>
+                                    </select>
+                                    <span cwa-for="MCCargaDocumentosModel.Subtema" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.NumeroDeNota"></label>
+                                    <input id="cwa-numeronota-input" asp-for="MCCargaDocumentosModel.NumeroDeNota" class="form-control"/>
+                                    <span cwa-for="MCCargaDocumentosModel.NumeroDeNota" class="text-danger cwa-small"></span>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-2">
+                                    <label asp-for="MCCargaDocumentosModel.Descripcion"></label>
+                                    <textarea id="cwa-descripcion-textarea" asp-for="MCCargaDocumentosModel.Descripcion" class="form-control">
+                                    </textarea>
+                                    <span cwa-for="MCCargaDocumentosModel.Descripcion" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.DocumentoPrincipal"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.DocumentoPrincipal" class="form-control"/>
+                                    <span cwa-for="MCCargaDocumentosModel.DocumentoPrincipal" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.Adjunto1"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.Adjunto1" class="form-control" />
+                                    <span cwa-for="MCCargaDocumentosModel.Adjunto1" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.Adjunto2"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.Adjunto2" class="form-control" />
+                                    <span cwa-for="MCCargaDocumentosModel.Adjunto2" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.Adjunto3"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.Adjunto3" class="form-control" />
+                                    <span cwa-for="MCCargaDocumentosModel.Adjunto3" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.Adjunto4"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.Adjunto4" class="form-control" />
+                                    <span cwa-for="MCCargaDocumentosModel.Adjunto4" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                            <div class="row cwa-doc-row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="MCCargaDocumentosModel.Adjunto5"></label>
+                                    <input type="file" asp-for="MCCargaDocumentosModel.Adjunto5" class="form-control" />
+                                    <span cwa-for="MCCargaDocumentosModel.Adjunto5" class="text-danger cwa-small"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="list-group-item">
+                        @* Buttons *@
+                        <div class="container-fluid text-center p-3">
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                                <span>Guardar</span>
+                            </button>
+                            <a id="cwa-back-link" asp-page="/ManejoDeCorrespondencia/Index" class="btn btn-sm btn-primary ms-1 me-1" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.temas = @Html.Raw(Json.Serialize(Model.Temas));
+            cwa.page.subtemas = @Html.Raw(Json.Serialize(Model.Subtemas));
+            cwa.page.respnotasal = @Html.Raw(Json.Serialize(Model.RespuestaNotasSalientes));
+            cwa.page.strings = {
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)"
+            };
+            cwa.page.showUpdate = @($"{Model.ShowUpdate}".ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/manejodecorrespondencia/mc.cargadocumentos.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+}

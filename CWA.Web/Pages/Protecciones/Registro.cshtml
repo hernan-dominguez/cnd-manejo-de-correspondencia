@@ -1,0 +1,110 @@
+﻿@page "{registroid:int}/{handler?}"
+@model CWA.Web.Pages.Protecciones.RegistroModel
+
+@inject LinkGenerator _links;
+@inject IOptions<ApplicationSettings> _options;
+
+@{
+    //string efectiva = _options.Value.GrandesClientes.Strings.FechaEstatus.Efectiva;
+    //string programada = _options.Value.Protecciones.Strings.FechaEstatus.Programada;
+    //string indefinida = _options.Value.GrandesClientes.Strings.FechaEstatus.Indefinida;
+    string aprobado = _options.Value.Protecciones.Strings.Autorizado;
+
+    //Model.ViewModel.FechaEstatus = Model.ViewModel.FechaEfectiva ? efectiva : Model.ViewModel.FechaEntrada.HasValue ? programada : indefinida;
+
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.RazonSocial });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Proyectos", Link = _links.GetPathByPage("/Protecciones/Index") });
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_PROTNavigationPartial" model="Model.InformationContext" />
+                @*<partial name="_PROTAprobacionPartial" model="Model.InformationContext" />*@
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item pt-3">
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.RazonSocial)</small>
+                                <span class="d-block">@Model.ViewModel.RazonSocial</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.Tipo)</small>
+                                <span class="d-block">@Model.ViewModel.Tipo</span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2" cwa-visible="Model.ShowUser">
+                                <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.ViewModel.RegUsuario)</small>
+                                <span class="d-block">@Model.ViewModel.RegUsuario</span>
+                            </div>
+                        </div>
+
+                        @* Approve Form *@
+                        <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                              data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                        </form>
+
+                        @* Buttons *@
+                        <div class="container-fluid text-center mb-2">
+                            <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                                <span>Guardar</span>
+                            </button>
+                            <button id="cwa-approve-button" type="button" class="btn btn-sm btn-danger me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                                <span>Habilitar</span>
+                            </button>
+                            <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                                <span>Regresar</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+                @* Footer *@
+                <div class="card-footer pb-1 bg-white">
+                    <div class="row g-1 justify-content-end">
+                        <div class="col-auto">
+                            <small>Creado </small>
+                            <small id="cwa-last-save">@Model.ViewModel.RegFecha.ToString(_options.Value.DateFormat)</small>
+                        </div>
+                        <div class="col-auto align-items-center">
+                            <i id="cwa-last-save-icon" class="bi-cloud-check-fill text-primary" style="font-size: 1.2em;"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.strings = { aprobado: "@aprobado"@*, programada: "@programada"*@ };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                customClass: { confirmButton: "btn btn-primary" },
+                confirmButtonText: "Aceptar",
+                errorText: "Ocurrió un error al procesar la solicitud"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/protecciones/prot.registro.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

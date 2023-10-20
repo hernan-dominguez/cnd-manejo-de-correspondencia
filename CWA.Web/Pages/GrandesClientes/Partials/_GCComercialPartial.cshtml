@@ -1,0 +1,26 @@
+﻿@model GCComercialView
+
+@inject IOptions<ApplicationSettings> _options
+
+@{ 
+    string nacional = Model.MontoGarantiaNacional.HasValue
+        ? $"B/.{String.Format(_options.Value.MoneyFormat, Model.MontoGarantiaNacional.Value)}" : _options.Value.GrandesClientes.Strings.NoRegistrado;
+
+    string regional = Model.MontoGarantiaRegional.HasValue
+        ? $"B/.{String.Format(_options.Value.MoneyFormat, Model.MontoGarantiaRegional.Value)}" : _options.Value.GrandesClientes.Strings.NoRegistrado;
+}
+
+<div class="row mb-3">
+    <div class="col-12 col-md-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.CuentaBancaria)</small>
+        <span class="d-block">@Model.CuentaBancaria.Blank(_options.Value.GrandesClientes.Strings.NoRegistrado)</span>
+    </div>
+    <div class="col-12 col-md-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.MontoGarantiaNacional)</small>
+        <span class="d-block">@nacional</span>
+    </div>
+    <div class="col-12 col-md-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.MontoGarantiaRegional)</small>
+        <span class="d-block">@regional</span>
+    </div>
+</div>

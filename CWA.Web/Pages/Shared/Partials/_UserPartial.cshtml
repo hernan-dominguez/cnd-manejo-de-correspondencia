@@ -1,0 +1,33 @@
+﻿@inject SignInManager<AppUser> _sim;
+
+@functions {
+    string getFullName()
+    {
+        var claim = User.Claims.Where(c => c.Type == "FULL-NAME").FirstOrDefault();
+
+        return (claim is null) ? "Usuario en Sesión" : claim.Value;
+    }
+}
+
+@if (_sim.IsSignedIn(User))
+{
+    <div class="dropdown float-end">
+        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi-person-square fs-4 align-middle"></i>
+            <span class="ms-1 d-none d-md-inline">@getFullName()</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li class="d-block d-md-none">
+                <h4 class="dropdown-header">@getFullName()</h4>
+            </li>
+            <li>
+                <form asp-page="/SignOut" method="post">
+                    <button type="submit" class="dropdown-item">
+                        <i class="bi-box-arrow-left align-middle"></i>
+                        <span class="ms-1">Cerrar sesión</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}

@@ -1,0 +1,35 @@
+﻿@page
+@model CWA.Web.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Admin Index";
+}
+
+<br />
+<div class="container">
+    <div class="row g-3">
+        <div class="col-12 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Usuarios</h5>
+                    <a asp-page="Usuarios" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Agentes</h5>
+                    <a asp-page="Agentes" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Catálogos</h5>
+                    <a asp-page="Catalogos" class="btn btn-sm btn-primary float-end">Ingresar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

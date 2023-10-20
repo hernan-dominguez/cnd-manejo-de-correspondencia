@@ -1,0 +1,48 @@
+﻿@model List<Breadcrumb>
+
+@inject LinkGenerator _links
+
+<div class="row pt-3">
+    <div class="col">
+        <div class="container-xxl">
+            <div class="row">
+                <div class="col">
+                    <nav>
+                        <ol class="breadcrumb">
+                            @if (_links.GetPathByPage(Context) != "/")
+                            {
+                                <li class="breadcrumb-item">
+                                    <a class="cwa-no-underline" asp-page="/Index">
+                                        <small><i class="bi-house-door"></i></small>
+                                    </a>
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li class="breadcrumb-item active">
+                                    <small>&nbsp;</small>
+                                </li>
+                            }
+                            @if (Model.Count > 0)
+                            {
+                                @foreach (var item in Model.Where(o => o.Order > 0).OrderBy(o => o.Order))
+                                {
+                                    <li class="breadcrumb-item">
+                                        <a class="cwa-no-underline" href="@item.Link">
+                                            <small>@item.Text</small>
+                                        </a>
+                                    </li>
+                                }
+
+                                <li class="breadcrumb-item active">
+                                    <small>@Model.Where(w => w.Order == 0).First().Text</small>
+                                </li>
+                            }
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

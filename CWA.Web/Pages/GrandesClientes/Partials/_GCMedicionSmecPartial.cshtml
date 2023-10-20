@@ -1,0 +1,39 @@
+﻿@model GCMedicionSmecView
+
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Distribuidora)</small>
+        <span class="d-block">@Model.Distribuidora.Blank()</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Cliente)</small>
+        <span class="d-block">@Model.Cliente.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6 mb-3">
+        <small class="d-block fw-bold">@Model.TipoDistIdentificacion.Blank()</small>
+        <span class="d-block">@Model.Identificacion.Blank()</span>
+    </div>
+</div>
+<div class="row mb-2 mb-md-3">
+    <div class="col-12 col-lg-6 mb-2 mb-lg-auto">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Serie)</small>
+        <span class="d-block">@Model.Serie.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Tension)</small>
+        <span class="d-block">@Model.Tension.Blank()</span>
+    </div>
+</div>
+<div class="row mb-2 mb-md-3">
+    <div class="col-12 col-lg-6 mb-2 mb-lg-auto">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Subestacion)</small>
+        <span class="d-block">@Model.Subestacion.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-6">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Linea)</small>
+        <span class="d-block">@Model.Linea.Blank()</span>
+    </div>
+</div>

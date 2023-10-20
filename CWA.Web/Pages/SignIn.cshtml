@@ -1,0 +1,62 @@
+﻿@page
+@model CWA.Web.Pages.SignInModel
+
+@{ 
+    Layout = "_LayoutBase";
+}
+
+<form method="post">
+    <div class="container mt-5">
+        <div class="row mb-4 justify-content-center">
+            <div class="col-auto">                
+                <h6 class="cwa-login-title" cwa-visible="!Model.IsError">@Model.HeadMessage</h6>
+                <h6 class="fw-bold text-danger cwa-login-title" cwa-visible="Model.IsError">@Model.HeadMessage</h6>
+            </div>
+        </div>
+        <div class="row mb-3 justify-content-center">
+            <div class="col-12 col-md-7 col-lg-5">
+                <div class="form-floating">
+                    <input id="cwa-user-input" asp-for="ModelData.UserName" class="form-control" placeholder="name@@example.com" />
+                    <label asp-for="ModelData.UserName"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4 justify-content-center">
+            <div class="col-12 col-md-7 col-lg-5">
+                <div class="form-floating">
+                    <input asp-for="ModelData.PassWord" class="form-control" placeholder="password" />
+                    <label asp-for="ModelData.PassWord"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4 justify-content-center">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary" style="width: 155px;">
+                    <i class="bi-box-arrow-in-right align-middle"></i>
+                    <span class="ms-1">Iniciar sesión</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post" asp-page="Ark" asp-route-returnurl="@Model.ReturnUrl">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-danger" style="width: 155px;" name="provider" value="Microsoft">
+                    <i class="bi-microsoft align-middle"></i>
+                    <span class="ms-1">Usuarios CND</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section PageSections {
+    <script>
+        var isError = @Model.IsError.ToString().ToLower();
+
+        if (isError == true) document.getElementById("cwa-user-input").focus();
+    </script>
+}

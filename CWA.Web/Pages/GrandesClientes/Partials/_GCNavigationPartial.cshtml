@@ -1,0 +1,102 @@
+﻿@model ViewPack<object>
+
+@inject LinkGenerator _links
+
+@{
+    bool showMedidor = Model.ContainsKey("medidores");
+    bool showComercial = Model.ContainsKey("comercial");
+    var current = $"{Model["current"]}";
+}
+
+@functions {
+    bool Inactive(string target, string current) { return target != current; }
+}
+
+<div class="card-header bg-white">
+    <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+            @if (Inactive("registro", current))
+            {
+                <a asp-page="Registro" asp-route-registroid="@Model["id"]" class="nav-link">
+                    <span class="d-none d-lg-block">Registro</span>
+                    <i class="bi-calendar-check d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Registro</span>
+                <i class="bi-calendar-check nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+        <li class="nav-item">
+            @if (Inactive("generales", current))
+            {
+                <a asp-page="Generales" asp-route-registroid="@Model["id"]" asp-route-generalesid="@Model["generales"]" class="nav-link">
+                    <span class="d-none d-lg-block">Generales</span>
+                    <i class="bi-file-earmark-text d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Generales</span>
+                <i class="bi-file-earmark-text nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+        <li class="nav-item" cwa-visible="showComercial">
+            @if (Inactive("comercial", current))
+            {
+                <a asp-page="Comercial" asp-route-registroid="@Model["id"]" asp-route-comercialid="@Model["comercial"]" class="nav-link">
+                    <span class="d-none d-lg-block">Comercial</span>
+                    <i class="bi-cash-coin d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Comercial</span>
+                <i class="bi-cash-coin nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+        <li class="nav-item">
+            @if (Inactive("mediciones", current))
+            {
+                <a asp-page="Mediciones" asp-route-registroid="@Model["id"]" class="nav-link">
+                    <span class="d-none d-lg-block">Mediciones</span>
+                    <i class="bi-speedometer d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Mediciones</span>
+                <i class="bi-speedometer nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+        <li class="nav-item" cwa-visible="showMedidor">
+            @if (Inactive("medidores", current))
+            {
+                <a asp-page="MedidoresDist" asp-route-registroid="@Model["id"]" class="nav-link">
+                    <span class="d-none d-lg-block">Medidores de Distribución</span>
+                    <i class="bi-speedometer d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Medidores de Distribución</span>
+                <i class="bi-speedometer nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+        <li class="nav-item">
+            @if (Inactive("documentos", current))
+            {
+                <a asp-page="Documentos" asp-route-registroid="@Model["id"]" class="nav-link">
+                    <span class="d-none d-lg-block">Documentos</span>
+                    <i class="bi-filetype-pdf d-lg-none"></i>
+                </a>
+            }
+            else
+            {
+                <span class="nav-link active disabled d-none d-sm-block">Documentos</span>
+                <i class="bi-filetype-pdf nav-link active disabled d-sm-none ms-sm-1"></i>
+            }
+        </li>
+    </ul>
+</div>

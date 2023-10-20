@@ -1,0 +1,178 @@
+﻿@page "{registroid:int}/{generalesid:int}/{handler?}"
+@model CWA.Web.Pages.Protecciones.GeneralesModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links;
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.RazonSocial });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Proyectos", Link = _links.GetPathByPage("/Protecciones/Index") });
+
+    string aprobado = _options.Value.Protecciones.Strings.ItemAprobado.Aprobado;
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_PROTNavigationPartial" model="Model.InformationContext" />
+                <partial name="_PROTAprobacionPartial" model="Model.InformationContext" />
+
+                <div class="card-body">
+                    @if (Model.ShowView)
+                    {
+                        <partial name="_PROTGeneralesPartial" model="Model.ViewModel" />
+                    }
+
+                    @* Update Form *@
+                    <form id="cwa-update-form" asp-page-handler="Update" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowUpdate">
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.DigitoVerificador"></label>
+                                <input asp-for="EditModel.DigitoVerificador" class="form-control" />
+                                <span cwa-for="EditModel.DigitoVerificador" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.RegistroUnicoContribuyente"></label>
+                                <input asp-for="EditModel.RegistroUnicoContribuyente" class="form-control" />
+                                <span cwa-for="EditModel.RegistroUnicoContribuyente" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 mb-2">
+                                <label asp-for="EditModel.ProvinciaId"></label>
+                                <select asp-for="EditModel.ProvinciaId" class="form-select" asp-items="Model.Provincias">
+                                    <option value="">Seleccione un elemento...</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-8 mb-4">
+                                <label asp-for="EditModel.DireccionFisica"></label>
+                                <input asp-for="EditModel.DireccionFisica" class="form-control" />
+                                <span cwa-for="EditModel.DireccionFisica" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <small class="fw-bold">Representante Legal</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RLegalNombre"></label>
+                                <input asp-for="EditModel.RLegalNombre" class="form-control" />
+                                <span cwa-for="EditModel.RLegalNombre" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RLegalTel"></label>
+                                <input asp-for="EditModel.RLegalTel" class="form-control" />
+                                <span cwa-for="EditModel.RLegalTel" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RLegalCorreo"></label>
+                                <input asp-for="EditModel.RLegalCorreo" class="form-control" />
+                                <span cwa-for="EditModel.RLegalCorreo" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <small class="fw-bold">Contacto Protecciones</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RProteccionNombre"></label>
+                                <input asp-for="EditModel.RProteccionNombre" class="form-control" />
+                                <span cwa-for="EditModel.RProteccionNombre" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RProteccionTel"></label>
+                                <input asp-for="EditModel.RProteccionTel" class="form-control" />
+                                <span cwa-for="EditModel.RProteccionTel" class="text-danger cwa-small"></span>
+                            </div>
+                            <div class="col-12 col-lg-4 mb-2">
+                                <label asp-for="EditModel.RProteccionCorreo"></label>
+                                <input asp-for="EditModel.RProteccionCorreo" class="form-control" />
+                                <span cwa-for="EditModel.RProteccionCorreo" class="text-danger cwa-small"></span>
+                            </div>
+                        </div>
+                    </form>
+
+                    @* Approve Form *@
+                    <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                    </form>
+
+                    @** Buttons *@
+                    <div class="container-fluid text-center mb-2">
+                        <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="Model.ShowUpdate">
+                            <span>Guardar</span>
+                        </button>
+                        <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                            <span>Aprobar</span>
+                        </button>
+                        <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                @* Footer *@
+                <div class="card-footer pb-1 bg-white">
+                    <div class="row g-1 justify-content-end">
+                        <div class="col-auto">
+                            <small>Actualizado </small>
+                            <small id="cwa-last-save">@Model.LastSave.ToString(_options.Value.DateTimeFormat)</small>
+                        </div>
+                        <div class="col-auto align-items-center">
+                            <i id="cwa-last-save-icon" class="bi-cloud-check-fill text-primary" style="font-size: 1.2em;"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(aprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.Strings.AprobarDatos)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+            cwa.page.showView = @(Model.ShowView.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/protecciones/prot.generales.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

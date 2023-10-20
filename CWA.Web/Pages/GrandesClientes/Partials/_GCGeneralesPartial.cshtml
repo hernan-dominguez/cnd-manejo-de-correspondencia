@@ -1,0 +1,80 @@
+﻿@model GCGeneralesView
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.RazonSocial)</small>
+        <span class="d-block">@Model.RazonSocial.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Ruc)</small>
+        <span class="d-block">@Model.Ruc.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Digito)</small>
+        <span class="d-block">@Model.Digito.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Provincia)</small>
+        <span class="d-block">@Model.Provincia.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Direccion)</small>
+        <span class="d-block">@Model.Direccion.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.Telefono)</small>
+        <span class="d-block">@Model.Telefono.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.WebUrl)</small>
+        <span class="d-block">@Model.WebUrl.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-12">
+        <small class="fw-bold">Representante Legal</small>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.LegalNombre)</small>
+        <span class="d-block">@Model.LegalNombre.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.LegalTelefono)</small>
+        <span class="d-block">@Model.LegalTelefono.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.LegalCorreo)</small>
+        <span class="d-block">@Model.LegalCorreo.Blank()</span>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-12">
+        <small class="fw-bold">Contacto Smec</small>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.SmecNombre)</small>
+        <span class="d-block">@Model.SmecNombre.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.SmecTelefono)</small>
+        <span class="d-block">@Model.SmecTelefono.Blank()</span>
+    </div>
+    <div class="col-12 col-lg-4 mb-2">
+        <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.SmecCorreo)</small>
+        <span class="d-block">@Model.SmecCorreo.Blank()</span>
+    </div>
+</div>

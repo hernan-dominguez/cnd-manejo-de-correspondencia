@@ -1,0 +1,159 @@
+﻿@page "{registroid:int}/{comercialid:int}/{handler?}"
+@model CWA.Web.Pages.GrandesClientes.ComercialModel
+
+@inject IOptions<ApplicationSettings> _options
+@inject LinkGenerator _links
+
+@{
+    List<Breadcrumb> BreadcrumbsModel = new();
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 0, Text = Model.Nombre });
+    BreadcrumbsModel.Add(new Breadcrumb { Order = 1, Text = "Grandes Clientes", Link = _links.GetPathByPage("/GrandesClientes/Index") });
+
+    string nacional = Model.EditModel is not null && Model.EditModel.MontoGarantiaNacional.HasValue
+        ? $"B/.{String.Format(_options.Value.MoneyFormat, Model.EditModel.MontoGarantiaNacional.Value)}" : _options.Value.GrandesClientes.Strings.NoRegistrado;
+
+    string regional = Model.EditModel is not null && Model.EditModel.MontoGarantiaRegional.HasValue
+        ? $"B/.{String.Format(_options.Value.MoneyFormat, Model.EditModel.MontoGarantiaRegional.Value)}" : _options.Value.GrandesClientes.Strings.NoRegistrado;
+
+    string aprobado = _options.Value.GrandesClientes.Strings.Aprobado;
+}
+
+@section PageBreadcrumbsSection {
+    <partial name="_BreadcrumbsPartial" model="BreadcrumbsModel" />
+}
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <partial name="_GCNavigationPartial" model="Model.RegistroContext" />
+                <partial name="_GCCardHeaderPartial" model="Model.RegistroContext" />
+
+                <div class="card-body">
+                    @if (Model.ShowView)
+                    {
+                        <partial name="_GCComercialPartial" model="Model.ViewModel" />
+                    }
+
+                    @* Update Form *@
+                    <form id="cwa-update-form" asp-page-handler="Update" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowUpdate">
+
+                        <div class="row">
+
+                            @* Cuenta Bancaria *@
+                            @if (Model.ShowApprove)
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.EditModel.CuentaBancaria)</small>
+                                    <span class="d-block">@Model.EditModel.CuentaBancaria.Blank(_options.Value.GrandesClientes.Strings.NoRegistrado)</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <label asp-for="EditModel.CuentaBancaria"></label>
+                                    <input asp-for="EditModel.CuentaBancaria" class="form-control" />
+                                    <span cwa-for="EditModel.CuentaBancaria" class="text-danger cwa-small"></span>
+                                </div>
+                            }
+
+                            @* Garantía Nacional *@
+                            @if (!Model.ShowApprove)
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.EditModel.MontoGarantiaNacional)</small>
+                                    <span class="d-block">@nacional</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <label asp-for="EditModel.MontoGarantiaNacional"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">B/.</span>
+                                        <input asp-for="EditModel.MontoGarantiaNacional" class="form-control" />
+                                    </div>
+                                    <span cwa-for="EditModel.MontoGarantiaNacional" class="text-danger cwa-small"></span>
+                                </div>
+                            }
+
+                            @* Garantía Regional *@
+                            @if (!Model.ShowApprove)
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <small class="d-block fw-bold">@Html.DisplayNameFor(m => Model.EditModel.MontoGarantiaRegional)</small>
+                                    <span class="d-block">@regional</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 col-md-4 mb-2">
+                                    <label asp-for="EditModel.MontoGarantiaRegional"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">B/.</span>
+                                        <input asp-for="EditModel.MontoGarantiaRegional" class="form-control" />
+                                    </div>
+                                    <span cwa-for="EditModel.MontoGarantiaRegional" class="text-danger cwa-small"></span>
+                                </div>
+                            }
+                        </div>
+
+                    </form>
+
+                    @* Approve Form *@
+                    <form id="cwa-approve-form" asp-page-handler="Approve" method="post"
+                          data-ajax="true" data-ajax-method="post" data-ajax-complete="cwa.dialog.complete" novalidate cwa-visible="Model.ShowApprove">
+                    </form>
+
+                    @* Buttons *@
+                    <div class="container-fluid text-center p-3">
+                        <button id="cwa-update-button" type="button" class="btn btn-sm btn-primary me-2" style="width: 100px;" cwa-visible="!Model.ShowView">
+                            <span>Guardar</span>
+                        </button>
+                        <button id="cwa-approve-button" type="button" class="btn btn-sm btn-success me-2" style="width: 100px;" cwa-visible="Model.ShowApprove">
+                            <span>Aprobar</span>
+                        </button>
+                        <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 100px;">
+                            <span>Regresar</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                @* Footer *@
+                <partial name="_GCCardFooterPartial" model="Model.LastSave" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowUpdate || Model.ShowApprove)
+{
+    @section PageScriptSection {
+        <script>
+            // Page script properties
+            cwa.page.strings = {
+                aprobado: "@Html.Raw(aprobado)",
+                guardar: "@Html.Raw(_options.Value.Strings.GuardarDatos)",
+                aprobar: "@Html.Raw(_options.Value.Strings.AprobarDatos)"
+            };
+            cwa.page.showUpdate = @(Model.ShowUpdate.ToString().ToLower());
+            cwa.page.showApprove = @(Model.ShowApprove.ToString().ToLower());
+            cwa.page.showView = @(Model.ShowView.ToString().ToLower());
+
+            // Page dialog properties
+            cwa.dialog.parameters = {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                errorText: "@Html.Raw(_options.Value.Strings.ErrorHttp)"
+            };
+        </script>
+
+        @* Page specific scripts *@
+        <script src="~/esx/pages/grandesclientes/gc.comercial.js" asp-append-version="true"></script>
+
+        @* Dialog scripts *@
+        <script src="~/esx/utils/page-dialog.js" asp-append-version="true"></script>
+    }
+}

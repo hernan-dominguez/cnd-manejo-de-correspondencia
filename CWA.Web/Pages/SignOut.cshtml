@@ -1,0 +1,45 @@
+﻿@page
+@model CWA.Web.Pages.SignOutModel
+
+@inject SignInManager<AppUser> _sim
+
+@{
+    Layout = "_LayoutBase";
+}
+
+@if (_sim.IsSignedIn(User))
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto">
+                <a asp-page="Index" class="cwa-no-underline">Haga clic aquí para volver al inicio si no desea cerrar su sesión</a>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <form method="post">
+                    <button type="submit" class="btn btn-primary" style="width: 150px;">
+                        <i class="bi-box-arrow-left align-middle"></i>
+                        <span class="ms-1">Cerrar sesión</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto">
+                <h6 class="fs-">No ha iniciado ninguna sesión</h6>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a asp-page="Index" class="btn btn-sm btn-primary" style="width: 175px;">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+}
+
